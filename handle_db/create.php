@@ -8,7 +8,7 @@
         require_once($_SERVER["DOCUMENT_ROOT"] . "/Proyecto_Final/config/database.php");
 
         try {
-            $result = $mysqli->query("INSERT INTO usuarios (nombre, email, contrasena, rol_id, estado) VALUES ('$nombre', '$correo', '$hash', '1', 'activo')");
+            $result = $mysqli->query("INSERT INTO usuarios (nombre, email, contrasena, rol_id, estado) VALUES ('$nombre', '$correo', '$hash', '1', '1')");
             if ($result) {
                 $data = $mysqli->query("SELECT * FROM usuarios WHERE email = '$correo'");
                 $data = $data->fetch_assoc();

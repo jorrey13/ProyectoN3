@@ -139,7 +139,6 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                 </button>
               </li>
               <!-- Notifications menu -->
-            
               <!-- Profile menu -->
               <li class="relative">
                 <button
@@ -247,7 +246,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                     // Verifica si se ha proporcionado un ID de usuario para editar
                     if (isset($_POST['id_alumno']) && !empty($_POST['id_alumno'])) {
                         $userId = $_POST['id_alumno'];
-                        echo "El usuario es". $userId;
+                        // echo "El usuario es". $userId;
                         // Consulta la base de datos para obtener los datos del usuario
                         $query = "SELECT * FROM usuarios WHERE id_user = ?";
                         $stmt = $mysqli->prepare($query);

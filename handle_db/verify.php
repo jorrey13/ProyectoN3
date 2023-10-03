@@ -23,17 +23,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 session_start();
                 $_SESSION["user_data"] = $result;
                 // var_dump($_SESSION["user_data"]);
-                header("Location: ./../design/admin/dashboard_admin.php");
+                if ($_SESSION["user_data"]["estado"] === '1') {
+                    header("Location: ./../design/admin/dashboard_admin.php");
+                }else {
+                    $_SESSION["usuario_bloqueado"] = TRUE;
+                    header("Location: /index.php?usuario_inactivo");
+                }
             }elseif ($result["rol_id"]==="2") {
                 session_start();
                 $_SESSION["user_data"] = $result;
                 // var_dump($_SESSION["user_data"]);
-                header("Location: ./../design/maestro/dashboard_maestro.php");
+                if ($_SESSION["user_data"]["estado"] === '1') {
+                    header("Location: ./../design/maestro/dashboard_maestro.php");
+                }else {
+                    $_SESSION["usuario_bloqueado"] = TRUE;
+                    header("Location: /index.php?usuario_inactivo");
+                }
             }elseif ($result["rol_id"]==="3") {
                 session_start();
                 $_SESSION["user_data"] = $result;
                 // var_dump($_SESSION["user_data"]);
-                header("Location: ./../design/alumno/dashboard_alumno.php");
+                if ($_SESSION["user_data"]["estado"] === '1') {
+                    header("Location: ./../design/alumno/dashboard_alumno.php");
+                }else {
+                    $_SESSION["usuario_bloqueado"] = TRUE;
+                    header("Location: /index.php?usuario_inactivo");
+                }
             }
         } else {
             session_start();

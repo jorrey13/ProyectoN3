@@ -221,6 +221,19 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
             <h2 class="my-6 text-2xl font-semibold text-gray-700">
               Modulo de clases
             </h2>
+            <?php
+                if (isset($_SESSION["nueva_clase"]) && $_SESSION["nueva_clase"]) {
+                echo "<div class='bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md' role='alert'>
+                <div class='flex'>
+                    <div class='py-1'></div>
+                    <div>
+                    <p class='font-bold'>Nueva clase creada y asignada al maestro con exito!!.</p>
+                    </div>
+                </div>
+                </div>";
+                $_SESSION["nueva_clase"] = false;
+            }
+            ?>
             <div class="flex justify-between">
             <p class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-500">
               Clases
@@ -232,6 +245,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
               </button>
             </div>
                   <!-- New Table -->
+
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
               <div class="w-full overflow-x-auto">
               <table class="w-full overflow-x-auto">
@@ -338,6 +352,122 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
         </main>
       </div>
     </div>
+     <!-- Modal backdrop. This what you want to place close to the closing body tag -->
+     <div
+      x-show="isModalOpen"
+      x-transition:enter="transition ease-out duration-150"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"
+    >
+      <!-- Modal -->
+      <div
+        x-show="isModalOpen"
+        x-transition:enter="transition ease-out duration-150"
+        x-transition:enter-start="opacity-0 transform translate-y-1/2"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0  transform translate-y-1/2"
+        @click.away="closeModal"
+        @keydown.escape="closeModal"
+        class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+        role="dialog"
+        id="modal"
+      >
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+          <button
+            class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+            aria-label="close"
+            @click="closeModal"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              role="img"
+              aria-hidden="true"
+            >
+              <path
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
+        </header>
+        <!-- Modal body -->
+        <div class="mt-4 mb-6">
+          <!-- Modal title -->
+          <p
+            class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
+          >
+            Crear una nueva clase
+          </p>
+          <!-- Modal description -->
+          <form class="container px-6 mx-auto grid" action="./../../handle_db/crud_clases/crear_clase.php" method="post">
+            <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Clase</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="Matematicas" value="" name="clase"
+                />
+              </label>
+              <label class="block text-xs">
+              <?php
+            // Realiza una consulta SQL para obtener los maestros disponibles
+              $querymaestros = "SELECT u.id_user as id_maestro, u.nombre as Maestro
+              FROM usuarios u
+              WHERE u.rol_id  = 2
+               AND u.id_user NOT IN (SELECT DISTINCT id_profesor FROM asignacionmaestros);";
+              $resultmaestros = $mysqli->query($querymaestros);
+
+              // Verifica si la consulta fue exitosa
+              if ($resultmaestros) {
+                  // Crear un arreglo asociativo con los resultados de la consulta
+                  $maestros = $resultmaestros->fetch_all(MYSQLI_ASSOC);
+                  $resultmaestros->free();
+              } else {
+                  // Manejar errores en caso de que la consulta falle
+                  // ...
+              }
+
+            ?>
+                  <span class="text-gray-700 dark:text-gray-400">Maestro(s)</span>
+                  <select
+                      class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-select"
+                      name="maestro"
+                  >
+                      <option value="">Selecciona un maestro</option>
+                      <?php
+                      // Itera a través del arreglo de maestros y crea opciones para cada uno
+                      if (isset($maestros) && is_array($maestros)) {
+                        // Itera a través del arreglo de maestros y crea opciones para cada uno
+                        foreach ($maestros as $maestro) {
+                          echo '<option value="' . $maestro['id_maestro'] . '">' . $maestro['Maestro'] . '</option>';
+                        }
+                      } else {
+                        echo '<option value="" disabled>No hay maestros disponibles</option>';
+                      }
+                      ?>
+                  </select>
+              </label>
+            </div>
+            <button
+                class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" type="submit"
+            >
+                Accept
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- End of modal backdrop -->
   </body>
 </html>
 

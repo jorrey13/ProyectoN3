@@ -139,7 +139,6 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                 </button>
               </li>
               <!-- Notifications menu -->
-            
               <!-- Profile menu -->
               <li class="relative">
                 <button
@@ -219,7 +218,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
         <main class="h-full overflow-y-auto bg-white">
             <div class="container px-6 mx-auto grid">
             <h2 class="my-6 text-2xl font-semibold text-gray-700">
-              Lista de maestros
+              Permisos
             </h2>
             <?php
             if (isset($_SESSION["U_CREADO"]) && $_SESSION["U_CREADO"]) {
@@ -227,7 +226,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                 <div class='flex'>
                     <div class='py-1'></div>
                     <div>
-                    <p class='font-bold'>Maestro editado satisfactoriamente.</p>
+                    <p class='font-bold'>Alumno creado satisfactoriamente.</p>
                     </div>
                 </div>
                 </div>";
@@ -236,7 +235,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
             ?>
             <div class="flex justify-between">
             <p class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-500">
-              Editar maestro
+              Editar un permiso
             </p>
             </div>
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -245,11 +244,13 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                 require_once($_SERVER["DOCUMENT_ROOT"] . "/Proyecto_Final/config/database.php");
                 if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     // Verifica si se ha proporcionado un ID de usuario para editar
-                    if (isset($_POST['id_alumno']) && !empty($_POST['id_alumno'])) {
-                        $userId = $_POST['id_alumno'];
+                    if (isset($_POST['id_user']) && !empty($_POST['id_user'])) {
+                        $userId = $_POST['id_user'];
                         // echo "El usuario es". $userId;
                         // Consulta la base de datos para obtener los datos del usuario
-                        $query = "SELECT * FROM usuarios WHERE id_user = ?";
+                        $query = "SELECT e.id_estado as estadoID, r.id_rol as rolID, u.id_user as ID, u.email as correo, r.rol as Permisos, e.estado as Estado from usuarios u 
+                        inner join roles r on r.id_rol = u.rol_id
+                        inner join estado e on e.id_estado = u.estado WHERE id_user = ?";
                         $stmt = $mysqli->prepare($query);
                         $stmt->bind_param("i", $userId);
                         $stmt->execute();
@@ -266,65 +267,84 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                     // Resto del código para procesar la actualización del usuario
                 }
                 ?>
-                    <form class="container px-6 mx-auto grid" action="./../../handle_db/crud_maestro/edit_maestro.php" method="post">
-                      <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                      <input type="hidden" id="user-id" name="user-id" value="<?php echo $userData['id_user']; ?>">
-                      <label class="block text-xs">
-                          <span class="text-gray-700 dark:text-gray-400">DNI</span>
-                          <input
-                          class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                          placeholder="0606199600220" value="<?php echo $userData['dni']; ?>" name="dni"
-                          />
-                      </label>  
-                      <label class="block text-xs">
-                          <span class="text-gray-700 dark:text-gray-400">Correo electronico</span>
-                          <input
-                          class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                          placeholder="User@user" value="<?php echo $userData['email']; ?>" name="email"
-                          />
-                      </label>
-                    <label class="block text-xs">
-                      <span class="text-gray-700 dark:text-gray-400">password:</span>
-                      <input
-                        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                        placeholder="************" name="password" type="password"
-                      />
-                    </label>
-                    <label class="block text-xs">
-                      <span class="text-gray-700 dark:text-gray-400">Nombre(s)</span>
-                      <input
-                        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                        placeholder="Jorge" value="<?php echo $userData['nombre']; ?>" name="nombre"
-                      />
-                    </label>
-                    <label class="block text-xs">
-                      <span class="text-gray-700 dark:text-gray-400">Apellido(s)</span>
-                      <input
-                        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                        placeholder="Reyes" value="<?php echo $userData['apellido']; ?>" name="apellido"
-                      />
-                    </label>
-                    <label class="block text-xs">
-                      <span class="text-gray-700 dark:text-gray-400">Dirección</span>
-                      <input
-                        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                        placeholder="Av. 555, calle 7, etc" value="<?php echo $userData['direccion']; ?>" name="direccion"
-                      />
-                    </label>
-                    <label class="block text-xs">
-                      <span class="text-gray-700 dark:text-gray-400">Fecha Nacimiento</span>
-                      <input
-                        class="block w-200 mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                      type="date" value="<?php echo $userData['fecha_nacimiento']; ?>" name="fecha_nacimiento"
-                      />
-                    </label>
-                  </div>
-                  <button
-                      class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" type="submit"
-                  >
-                      Accept
-                  </button>
-                </form>
+                    <form class="container px-6 mx-auto grid" action="./../../handle_db/crud_admin/edit_permiso.php" method="post">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <input type="hidden" id="usuario_id" name="usuario_id" value="<?php echo $userData['ID']; ?>">
+  
+        <label class="block text-xs">
+            <span class="text-gray-700 dark:text-gray-400">Email del usuario</span>
+            <input
+                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                placeholder="User@user" value="<?php echo $userData['correo']; ?>" name="email"
+            />
+        </label>
+        <?php
+            // Realiza una consulta SQL para obtener los roles disponibles
+            $queryRoles = "SELECT id_rol, rol FROM roles";
+            $resultRoles = $mysqli->query($queryRoles);
+
+            // Verifica si la consulta fue exitosa
+            if ($resultRoles) {
+                // Crear un arreglo asociativo con los resultados de la consulta
+                $roles = $resultRoles->fetch_all(MYSQLI_ASSOC);
+                $resultRoles->free();
+            } else {
+                // Manejar errores en caso de que la consulta falle
+                // ...
+            }
+            ?>
+            <label class="block text-xs">
+              <span class="text-gray-700 dark:text-gray-400">Rol del usuario</span>
+              <select
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-select"
+                  name="rol"
+              >
+                  <?php foreach ($roles as $role): ?>
+                      <option value="<?php echo $role['id_rol']; ?>" <?php echo ($userData['rolID'] === $role['id_rol']) ? 'selected' : ''; ?>>
+                          <?php echo $role['rol']; ?>
+                      </option>
+                  <?php endforeach; ?>
+              </select>
+            </label>
+            <?php
+            // Realiza una consulta SQL para obtener los estados disponibles
+              $queryEstados = "SELECT id_estado, estado FROM estado";
+              $resultEstados = $mysqli->query($queryEstados);
+
+              // Verifica si la consulta fue exitosa
+              if ($resultEstados) {
+                  // Crear un arreglo asociativo con los resultados de la consulta
+                  $estados = $resultEstados->fetch_all(MYSQLI_ASSOC);
+                  $resultEstados->free();
+              } else {
+                  // Manejar errores en caso de que la consulta falle
+                  // ...
+              }
+
+            ?>
+            <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Estado del usuario</span>
+                <select
+                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-select"
+                    name="estado"
+                >
+                    <?php foreach ($estados as $estado): ?>
+                        <option value="<?php echo $estado['id_estado']; ?>" <?php echo ($userData['estadoID'] === $estado['id_estado']) ? 'selected' : ''; ?>>
+                            <?php echo $estado['estado']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+
+    </div>
+    <button
+        class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+        type="submit"
+    >
+        Actualizar
+    </button>
+</form>
+
               </div>
             </div>
           </div>

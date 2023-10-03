@@ -12,13 +12,13 @@
         require_once($_SERVER["DOCUMENT_ROOT"] . "/Proyecto_Final/config/database.php");
 
         try {
-            $result = $mysqli->query("INSERT INTO usuarios ( dni, email, contrasena, nombre, apellido, fecha_nacimiento, direccion, rol_id, estado) VALUES ('$dni', '$email', '$hash', '$nombre', '$apellido', '$fecha_nacimiento', '$direccion','1','activo')");
+            $result = $mysqli->query("INSERT INTO usuarios ( dni, email, contrasena, nombre, apellido, fecha_nacimiento, direccion, rol_id, estado) VALUES ('$dni', '$email', '$hash', '$nombre', '$apellido', '$fecha_nacimiento', '$direccion','1','1')");
             if ($result) {
                 $data = $mysqli->query("SELECT * FROM usuarios WHERE email = '$email'");
                 $data = $data->fetch_assoc();
                 session_start();
                 $_SESSION["U_CREADO"] = TRUE;
-                header("Location: ./../../design/admin/alumnos.php");
+                header("Location: ./../../design/admin/permisos.php");
             }else {
                 echo "Error al registrar un usuario";
             }
@@ -26,7 +26,7 @@
             if ($mysqli->errno === 1062) {
                 session_start();
                 $_SESSION["duplicado"] = TRUE;
-                header("Location: ./../../design/admin/alumnos.php");
+                header("Location: ./../../design/admin/permisos.php");
             }else{
                 echo "Error" . $e->getMessage();
             };
