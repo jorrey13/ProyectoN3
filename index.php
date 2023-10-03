@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
   <head>
@@ -31,7 +34,7 @@
             <img
               aria-hidden="true"
               class="hidden object-cover w-full h-full dark:block"
-              src="./public/assets/img/login-office-dark.jpeg"
+              src="./src/img/logo.jpg"
               alt="Office"
             />
           </div>
@@ -42,6 +45,17 @@
                 >
                   Login
                 </h1>
+                <?php
+                if (isset($_SESSION["cerro_session"]) && $_SESSION["cerro_session"]) {
+                  echo "<div class='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
+                  <strong class='font-bold'>Alerta!</strong>
+                  <span class='block sm:inline'>Debes iniciar sesion.</span>
+                  <span class='absolute top-0 bottom-0 right-0 px-4 py-3'>
+                  </span>
+                </div>";
+                    $_SESSION["cerro_session"] = false;
+                }
+                ?>
                 <label class="block text-xm">
                   <span class="text-gray-700 dark:text-gray-400">Email</span>
                   <input

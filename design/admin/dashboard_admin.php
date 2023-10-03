@@ -3,7 +3,8 @@ session_start();
 if (($_SESSION["user_data"]["rol_id"] !== "1")) {
     session_destroy();
     header("Location: ./../../index.php?debes_iniciar_sesion");
-    $_SESSION["inicio_sesion"] = true;
+    session_start();
+    $_SESSION["cerro_session"] = true;
 }
 ?>
 <!DOCTYPE html>
@@ -168,7 +169,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                     <li class="flex">
                       <a
                         class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                        href="#"
+                        href="./../admin/dashboard_admin_edit.php"
                       >
                         <svg
                           class="w-4 h-4 mr-3"

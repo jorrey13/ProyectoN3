@@ -3,7 +3,7 @@ const plugin = require('tailwindcss/plugin')
 const Color = require('color')
 
 module.exports = {
-  purge: ['public/**/*.html'],
+  purge: ['public/**/*.{php,js}', "./**.php"],
   theme: {
     themeVariants: ['dark'],
     customForms: (theme) => ({
@@ -200,6 +200,7 @@ module.exports = {
   plugins: [
     require('tailwindcss-multi-theme'),
     require('@tailwindcss/custom-forms'),
+    require('flowbite/plugin'),
     plugin(({ addUtilities, e, theme, variants }) => {
       const newUtilities = {}
       Object.entries(theme('colors')).map(([name, value]) => {

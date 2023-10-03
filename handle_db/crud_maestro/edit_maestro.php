@@ -10,7 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $apellido = $_POST["apellido"];
     $fecha_nacimiento = $_POST["fecha_nacimiento"];
     $direccion = $_POST["direccion"];
-    $id = $_SESSION["user_data"]["id_user"];
+    $id = $_POST["user-id"];
+
     try {
         $email !== "" && $mysqli->query("UPDATE usuarios SET email = '$email' where id_user = '$id'");
         if ($password !== "") {
@@ -24,14 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $direccion !== "" && $mysqli->query("UPDATE usuarios SET direccion = '$direccion' where id_user = '$id'");
 
         $query = $mysqli->query("SELECT * FROM usuarios WHERE id_user = '$id'");
-        $_SESSION["user_data"] = $query->fetch_assoc();
+        // $_SESSION["user_data"] = $query->fetch_assoc();
         echo "Actualización exitosa";
         $_SESSION["dato_actualizado"] = true;
-        header("Location: ./../design/maestro/dashboard_maestro.php");
+        header("Location: ./../../design/admin/maestros.php");
     } catch (mysqli_sql_exception $e) {
         echo "Error al actualizar" . $e->getMessage();
     }
 }else {
-    header("Location: ./../design/maestro/dashboard_maestro.php");
+    header("Location: ./../../design/admin/maestros.php");
 }
 ?>

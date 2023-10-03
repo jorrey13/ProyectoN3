@@ -1,9 +1,10 @@
 <?php
 session_start();
 if (($_SESSION["user_data"]["rol_id"] !== "3")) {
-    session_destroy();
-    header("Location: ./../../index.php?debes_iniciar_sesion");
-    $_SESSION["inicio_sesion"] = true;
+  session_destroy();
+  header("Location: ./../../index.php?debes_iniciar_sesion");
+  session_start();
+  $_SESSION["cerro_session"] = true;
 }
 ?>
 <!DOCTYPE html>

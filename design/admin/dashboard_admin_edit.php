@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (($_SESSION["user_data"]["rol_id"] !== "3")) {
+if (($_SESSION["user_data"]["rol_id"] !== "1")) {
   session_destroy();
   header("Location: ./../../index.php?debes_iniciar_sesion");
   session_start();
@@ -12,7 +12,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alumnos</title>
+    <title>Administrador</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -36,7 +36,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
   </head>
   <body>
       <?php
-        include("./../../config/menu_alumnos.php");
+        include("./../../config/menu_admin.php");
       ?>
       <!-- Mobile sidebar -->
       <!-- Backdrop -->
@@ -169,7 +169,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
                     <li class="flex">
                       <a
                         class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                        href="./../alumno/dashboard_alumno_edit.php"
+                        href="./../admin/dashboard_admin_edit.php"
                       >
                         <svg
                           class="w-4 h-4 mr-3"
@@ -217,25 +217,77 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
           </div>
         </header>
         <main class="h-full overflow-y-auto bg-white">
-          <div class="container px-6 mx-auto grid">
-            <h2 class="my-6 text-2xl font-semibold text-gray-700">
-              Dashboard
-            </h2>
-            <!-- Cards with title -->
-            <div class="grid gap-6 mb-8 md:grid-cols-2">
-              <div
-                class="min-w-0 p-4 bg-white rounded-lg shadow-xs "
-              >
-                <h4 class="mb-4 font-semibold text-gray-600 dark:text-gray-300">
-                  Bienvenido
-                </h4>
-                <p class="text-gray-600 dark:text-gray-400">
-                  Selecciona la opcion que quieras realizar en el menu de la izquierda.
-                </p>
-              </div>
-          </div>
+          <p>Información del usuario:</p>
+          <form class="container px-6 mx-auto grid" action="./../../handle_db/edit_admin.php" method="post">
+            <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Correo electronico</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="User@user" value="<?php $email = $_SESSION["user_data"]["email"];
+                    echo "$email"; ?>" name="email"
+                />
+              </label>
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Ingresa contraseña si deseas cambiar de lo contrario dejar en blanco:</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="************" name="password"
+                />
+              </label>
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">DNI</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="0601199604388" value="<?php $dni = $_SESSION["user_data"]["dni"];
+                    echo "$dni"; ?>" name="dni"
+                />
+              </label>
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Nombre(s)</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="Jane" value="<?php $nombre = $_SESSION["user_data"]["nombre"];
+                    echo "$nombre"; ?>" name="nombre"
+                />
+              </label>
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Apellido(s)</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="Doe" value="<?php $apellido = $_SESSION["user_data"]["apellido"];
+                    echo "$apellido"; ?>" name="apellido"
+                />
+              </label>
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Fecha Nacimiento</span>
+                <input
+                  class="block w-200 mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="Doe" type="date" value="<?php $fecha_nacimiento = $_SESSION["user_data"]["fecha_nacimiento"];
+                    echo "$fecha_nacimiento"; ?>" name="fecha_nacimiento"
+                />
+              </label>
+              <label class="block text-xs">
+                <span class="text-gray-700 dark:text-gray-400">Dirección</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="Av. 555, calle 7, etc" value="<?php $direccion = $_SESSION["user_data"]["direccion"];
+                    echo "$direccion"; ?>" name="direccion"
+                />
+              </label>
+            </div>
+            <div>
+                <button
+                  class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" type="submit"
+                >
+                  Guardar cambios
+                </button>
+              </div>  
+          
+          </form>
         </main>
       </div>
     </div>
   </body>
 </html>
+

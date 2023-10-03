@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $fecha_nacimiento = $_POST["fecha_nacimiento"];
     $direccion = $_POST["direccion"];
     $id = $_SESSION["user_data"]["id_user"];
+
     try {
         $email !== "" && $mysqli->query("UPDATE usuarios SET email = '$email' where id_user = '$id'");
         if ($password !== "") {
@@ -27,11 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["user_data"] = $query->fetch_assoc();
         echo "Actualización exitosa";
         $_SESSION["dato_actualizado"] = true;
-        header("Location: ./../design/maestro/dashboard_maestro.php");
+        header("Location: ./../design/admin/dashboard_admin.php");
     } catch (mysqli_sql_exception $e) {
         echo "Error al actualizar" . $e->getMessage();
     }
 }else {
-    header("Location: ./../design/maestro/dashboard_maestro.php");
+    header("Location: ./../design/admin/dashboard_admin.php");
 }
 ?>

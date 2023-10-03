@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (($_SESSION["user_data"]["rol_id"] !== "3")) {
+if (($_SESSION["user_data"]["rol_id"] !== "1")) {
   session_destroy();
   header("Location: ./../../index.php?debes_iniciar_sesion");
   session_start();
@@ -12,7 +12,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alumnos</title>
+    <title>Administrador</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -36,7 +36,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
   </head>
   <body>
       <?php
-        include("./../../config/menu_alumnos.php");
+        include("./../../config/menu_admin.php");
       ?>
       <!-- Mobile sidebar -->
       <!-- Backdrop -->
@@ -169,7 +169,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
                     <li class="flex">
                       <a
                         class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                        href="./../alumno/dashboard_alumno_edit.php"
+                        href="./../admin/dashboard_admin_edit.php"
                       >
                         <svg
                           class="w-4 h-4 mr-3"
@@ -219,23 +219,125 @@ if (($_SESSION["user_data"]["rol_id"] !== "3")) {
         <main class="h-full overflow-y-auto bg-white">
           <div class="container px-6 mx-auto grid">
             <h2 class="my-6 text-2xl font-semibold text-gray-700">
-              Dashboard
+              Modulo de clases
             </h2>
-            <!-- Cards with title -->
-            <div class="grid gap-6 mb-8 md:grid-cols-2">
-              <div
-                class="min-w-0 p-4 bg-white rounded-lg shadow-xs "
-              >
-                <h4 class="mb-4 font-semibold text-gray-600 dark:text-gray-300">
-                  Bienvenido
-                </h4>
-                <p class="text-gray-600 dark:text-gray-400">
-                  Selecciona la opcion que quieras realizar en el menu de la izquierda.
-                </p>
+            <div class="flex justify-between">
+            <p class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-500">
+              Clases
+            </p>
+              <button
+                @click="openModal"
+                class="scroll-py-16 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                Agregar una Clase
+              </button>
+            </div>
+                  <!-- New Table -->
+            <div class="w-full overflow-hidden rounded-lg shadow-xs">
+              <div class="w-full overflow-x-auto">
+              <table class="w-full overflow-x-auto">
+                  <thead>
+                    <tr
+                      class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+                    >
+                      <th class="px-4 py-3">#</th>
+                      <th class="px-4 py-3">Clase</th>
+                      <th class="px-4 py-3">Nombre</th>
+                      <th class="px-4 py-3">Cantidad de alumnos</th>
+                      <th class="px-4 py-3">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
+                  >
+                  <?php
+                  require_once($_SERVER["DOCUMENT_ROOT"] . "/Proyecto_Final/config/database.php");
+                  $id = $_SESSION["user_data"]["id_user"];
+                  $query = "SELECT c.id_materia  AS ID, c.materia  AS nombre_clase, COALESCE(m.nombre, 'Maestro sin asignar') AS nombre_maestro,
+                  COUNT(ra.id_alumno) AS cantidad_alumnos
+                  FROM
+                      materias c
+                  LEFT JOIN
+                      asignacionmaestros am ON c.id_materia = am.id_profemate
+                  LEFT JOIN
+                      usuarios m ON am.id_profesor  = m.id_user
+                  LEFT JOIN
+                      registroalumnos ra ON c.id_materia = ra.id_alumate
+                  GROUP BY
+                      c.id_materia, c.materia, m.nombre
+                  ORDER BY
+                      c.id_materia;";
+                  // var_dump($id);
+                  $result = $mysqli->query($query);
+                  // var_dump($result);
+                  while ($row = $result->fetch_assoc()){                    
+                    echo "<tr class='text-gray-700 dark:text-gray-400'>";
+                    echo "<td class='px-4 py-3'>" . $row['ID'] . "</td>";
+                    echo "<td class='px-4 py-3'>" . $row['nombre_clase'] . "</td>";
+                    echo "<td class='px-4 py-3'>" . $row['nombre_maestro'] . "</td>";
+                    echo "<td class='px-4 py-3'>" . $row['cantidad_alumnos'] . "</td>";
+                    echo "<td class='px-4 py-3'>
+                            <div class='flex flex-row items-center space-x-4 text-sm'>
+                                <form action='./../admin/maestro_edicion.php' method='POST'>
+                                    <input type='number' hidden value='{$row['ID']}' name='id_clase'>
+                                    <div class='flex items-center space-x-4 text-sm'>
+                                        <button
+                                        class='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                                        aria-label='Edit' type='submit'
+                                        >
+                                        <svg
+                                        class='w-5 h-5'
+                                        aria-hidden='true'
+                                        fill='currentColor'
+                                        viewBox='0 0 20 20'
+                                        >
+                                        <path
+                                            d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'
+                                        ></path>
+                                        </svg>
+                                        </button>
+                                    </div>
+                                </form>
+                                <form action='./../../handle_db/crud_alumno/eliminar_alumno.php' method='POST'>
+                                    <input type='number' hidden value='{$row['ID']}' name='id_clase'>
+                                    <div class='flex items-center space-x-4 text-sm'>
+                                    <button
+                                        class='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                                        aria-label='Delete'
+                                        type='submit'
+                                    >
+                                        <svg
+                                        class='w-5 h-5'
+                                        aria-hidden='true'
+                                        fill='currentColor'
+                                        viewBox='0 0 20 20'
+                                        >
+                                        <path
+                                            fill-rule='evenodd'
+                                            d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
+                                            clip-rule='evenodd'
+                                        ></path>
+                                        </svg>
+                                    </button>  
+                                    </div>
+                                </form>
+                            </div>
+                          </td>";
+                    echo "</tr>";
+                  }
+                  $result->free();
+                  ?>
+                  </tbody>
+              </table>
               </div>
+              <div
+                class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800"
+              >
+              </div>
+            </div>
           </div>
         </main>
       </div>
     </div>
   </body>
 </html>
+
