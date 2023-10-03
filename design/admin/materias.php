@@ -222,6 +222,15 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
               Modulo de clases
             </h2>
             <?php
+            if (isset($_SESSION["dato_borrado"]) && $_SESSION["dato_borrado"]) {
+                echo "<div class='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
+                <strong class='font-bold'>Alert!</strong>
+                <span class='block sm:inline'>Clase Eliminada!.</span>
+              </div>";
+                $_SESSION["dato_borrado"] = false;
+            }
+            ?>
+            <?php
                 if (isset($_SESSION["nueva_clase"]) && $_SESSION["nueva_clase"]) {
                 echo "<div class='bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md' role='alert'>
                 <div class='flex'>
@@ -311,7 +320,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                                         </button>
                                     </div>
                                 </form>
-                                <form action='./../../handle_db/crud_alumno/eliminar_alumno.php' method='POST'>
+                                <form action='./../../handle_db/crud_clases/eliminar_clases.php' method='POST'>
                                     <input type='number' hidden value='{$row['ID']}' name='id_clase'>
                                     <div class='flex items-center space-x-4 text-sm'>
                                     <button
@@ -441,7 +450,7 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                   <span class="text-gray-700 dark:text-gray-400">Maestro(s)</span>
                   <select
                       class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-select"
-                      name="maestro"
+                      name="maestro" required
                   >
                       <option value="">Selecciona un maestro</option>
                       <?php

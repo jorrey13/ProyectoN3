@@ -40,7 +40,7 @@
               <h1
                 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200"
               >
-                Create account
+                Crear admin para ingresar y hacer pruebas
               </h1>
               <label class="block text-sm">
                 <span class="text-gray-700 dark:text-gray-400">Nombre</span>
@@ -122,7 +122,7 @@
               <p class="mt-4">
                 <a
                   class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="./login.html"
+                  href="./../../index.php"
                 >
                   Already have an account? Login
                 </a>

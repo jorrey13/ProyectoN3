@@ -234,6 +234,15 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                 $_SESSION["A_creado"] = false;
             }
             ?>
+            <?php
+            if (isset($_SESSION["dato_borrado"]) && $_SESSION["dato_borrado"]) {
+                echo "<div class='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
+                <strong class='font-bold'>Alert!</strong>
+                <span class='block sm:inline'>Alumno Eliminado.</span>
+              </div>";
+                $_SESSION["dato_borrado"] = false;
+            }
+            ?>
             <div class="flex justify-between">
               <p class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-500">
                 Información de alumnos

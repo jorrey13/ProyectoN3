@@ -227,11 +227,20 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                 <div class='flex'>
                     <div class='py-1'></div>
                     <div>
-                    <p class='font-bold'>Alumno creado satisfactoriamente.</p>
+                    <p class='font-bold'>Maestro creado satisfactoriamente.</p>
                     </div>
                 </div>
                 </div>";
                 $_SESSION["A_creado"] = false;
+            }
+            ?>
+             <?php
+            if (isset($_SESSION["dato_borrado"]) && $_SESSION["dato_borrado"]) {
+                echo "<div class='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'>
+                <strong class='font-bold'>Alert!</strong>
+                <span class='block sm:inline'>Maestro Eliminado.</span>
+              </div>";
+                $_SESSION["dato_borrado"] = false;
             }
             ?>
             <div class="flex justify-between">
@@ -302,8 +311,8 @@ if (($_SESSION["user_data"]["rol_id"] !== "1")) {
                                         </button>
                                     </div>
                                 </form>
-                                <form action='./../../handle_db/crud_alumno/eliminar_alumno.php' method='POST'>
-                                    <input type='number' hidden value='{$row['id_user']}' name='id_alumno'>
+                                <form action='./../../handle_db/crud_maestro/eliminar_maestro.php' method='POST'>
+                                    <input type='number' hidden value='{$row['id_user']}' name='id_maestro'>
                                     <div class='flex items-center space-x-4 text-sm'>
                                     <button
                                         class='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'

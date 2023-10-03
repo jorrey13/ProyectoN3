@@ -17,8 +17,8 @@
                 $data = $mysqli->query("SELECT * FROM usuarios WHERE email = '$email'");
                 $data = $data->fetch_assoc();
                 session_start();
-                $_SESSION["U_CREADO"] = TRUE;
-                header("Location: ./../../design/admin/alumnos.php");
+                $_SESSION["A_creado"] = TRUE;
+                header("Location: ./../../design/admin/maestros.php");
             }else {
                 echo "Error al registrar un usuario";
             }
@@ -26,7 +26,7 @@
             if ($mysqli->errno === 1062) {
                 session_start();
                 $_SESSION["duplicado"] = TRUE;
-                header("Location: ./../../design/admin/alumnos.php");
+                header("Location: ./../../design/admin/maestros.php");
             }else{
                 echo "Error" . $e->getMessage();
             };
